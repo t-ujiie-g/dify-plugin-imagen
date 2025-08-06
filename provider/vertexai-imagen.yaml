@@ -2,11 +2,11 @@ identity:
   author: "t-ujiie-g"
   name: "vertexai-imagen"
   label:
-    en_US: "vertexai-imagen"
-    ja_JP: "vertexai-imagen"
+    en_US: "Vettex AI Imagen"
+    ja_JP: "Vertex AI Imagen"
   description:
-    en_US: "Imagen"
-    ja_JP: "Imagen"
+    en_US: "Generate images using Vertex AI Imagen."
+    ja_JP: "Vertex AI Imagenを使用して画像を生成します。"
   icon: "icon.svg"
 
 #########################################################################################

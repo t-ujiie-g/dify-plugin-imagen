@@ -1,10 +1,13 @@
 import os
+import json
+import base64
 from typing import Any
 
 from dify_plugin import ToolProvider
 from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 from google.cloud import aiplatform
 from vertexai.preview.vision_models import ImageGenerationModel
+from google.oauth2 import service_account
 
 class VertexaiImagenProvider(ToolProvider):
     
@@ -13,10 +16,17 @@ class VertexaiImagenProvider(ToolProvider):
             """
             IMPLEMENT YOUR VALIDATION HERE
             """
+            project_id = credentials.get('project_id')
+            location = credentials.get('location', 'us-central1')
+            service_account_key = credentials.get('vertex_service_account_key')
+
+            service_account_info = json.loads(base64.b64decode(service_account_key))
+            credentials_obj = service_account.Credentials.from_service_account_info(service_account_info)
+
             aiplatform.init(
-                project=credentials["project_id"],
-                location=credentials["location"],
-                credentials=credentials["vertex_service_account_key"]
+                project=project_id,
+                location=location,
+                credentials=credentials_obj,
             )
 
             generation_model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-002")

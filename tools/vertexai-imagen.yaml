@@ -2,15 +2,13 @@ identity:
   name: "vertexai-imagen"
   author: "t-ujiie-g"
   label:
-    en_US: "vertexai-imagen"
-    zh_Hans: "vertexai-imagen"
-    pt_BR: "vertexai-imagen"
+    en_US: "Vettex AI Imagen"
+    ja_JP: "Vertex AI Imagen"
 description:
   human:
-    en_US: "Imagen"
-    zh_Hans: "Imagen"
-    pt_BR: "Imagen"
-  llm: "Imagen"
+    en_US: "Generate images using Vertex AI Imagen."
+    ja_JP: "Vertex AI Imagenを使用して画像を生成します。"
+  llm: "A tool to generate images based on text prompts using Vertex AI Imagen. Specify the model, aspect ratio, number of images, and safety filter level."
 parameters:
   - name: prompt
     type: string
@@ -21,9 +19,7 @@ parameters:
     human_description:
       en_US: Describe the image you want to generate
       ja_JP: 生成したい画像を説明してください
-    llm_description:
-      en_US: A detailed text description of the image to generate. Be specific and descriptive for better results.
-      ja_JP: 生成する画像の詳細なテキスト説明。より良い結果を得るために具体的で説明的にしてください。
+    llm_description: A detailed text description of the image to generate. Be specific and descriptive for better results.
     form: llm
   - name: model
     type: select
@@ -34,9 +30,7 @@ parameters:
     human_description:
       en_US: Choose the Imagen model to use for generation
       ja_JP: 生成に使用するImagenモデルを選択
-    llm_description:
-      en_US: The Imagen model version to use. Imagen 3 offers the highest quality, while Fast version provides quicker generation.
-      ja_JP: 使用するImagenモデルのバージョン。Imagen 3は最高品質を提供し、Fastバージョンはより迅速な生成を提供します。
+    llm_description: The Imagen model version to use. Imagen 3 offers the highest quality, while Fast version provides quicker generation.
     options:
       - value: imagen-3.0-generate-001
         label:
@@ -46,7 +40,15 @@ parameters:
         label:
           en_US: Imagen 3.0 Fast (Quick Generation)
           ja_JP: Imagen 3.0 Fast（高速生成）
-    default: imagen-3.0-generate-001
+      - value: imagen-4.0-generate-preview-06-06
+        label:
+          en_US: Imagen 4.0 (High Quality)
+          ja_JP: Imagen 4.0（高品質）
+      - value: imagen-4.0-fast-generate-preview-06-06
+        label:
+          en_US: Imagen 4.0 Fast (Quick Generation)
+          ja_JP: Imagen 4.0 Fast（高速生成）
+    default: imagen-4.0-generate-preview-06-06
     form: form
   - name: aspect_ratio
     type: select
@@ -57,9 +59,7 @@ parameters:
     human_description:
       en_US: Choose the aspect ratio for the generated image
       ja_JP: 生成される画像のアスペクト比を選択
-    llm_description:
-      en_US: The aspect ratio for the generated image. Choose based on the intended use case.
-      ja_JP: 生成される画像のアスペクト比。使用目的に基づいて選択してください。
+    llm_description: The aspect ratio for the generated image. Choose based on the intended use case.
     options:
       - value: "1:1"
         label:
@@ -92,9 +92,7 @@ parameters:
     human_description:
       en_US: Number of images to generate (1-4)
       ja_JP: 生成する画像の数（1-4）
-    llm_description:
-      en_US: The number of images to generate. Maximum is 4 images per request.
-      ja_JP: 生成する画像の数。リクエストあたり最大4枚の画像。
+    llm_description: The number of images to generate. Maximum is 4 images per request.
     default: 1
     min: 1
     max: 4
@@ -108,23 +106,21 @@ parameters:
     human_description:
       en_US: Set the safety filter strictness level
       ja_JP: セーフティフィルターの厳格度レベルを設定
-    llm_description:
-      en_US: Controls how strict the safety filtering is for generated content.
-      ja_JP: 生成されるコンテンツに対するセーフティフィルタリングの厳格度を制御します。
+    llm_description: Controls how strict the safety filtering is for generated content.
     options:
-      - value: block_some
+      - value: block_medium_and_above
         label:
           en_US: Block Some (Recommended)
           ja_JP: 一部をブロック（推奨）
-      - value: block_few
+      - value: block_only_high
         label:
           en_US: Block Few
           ja_JP: 少数をブロック
-      - value: block_most
+      - value: block_low_and_above
         label:
           en_US: Block Most
           ja_JP: 大部分をブロック
-    default: block_some
+    default: block_medium_and_above
     form: form
 extra:
   python:
