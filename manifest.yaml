@@ -3,15 +3,11 @@ type: plugin
 author: t-ujiie-g
 name: vertexai-imagen
 label:
-  en_US: vertexai-imagen
-  ja_JP: vertexai-imagen
-  zh_Hans: vertexai-imagen
-  pt_BR: vertexai-imagen
+  en_US: Vettex AI Imagen
+  ja_JP: Vertex AI Imagen
 description:
-  en_US: Imagen
-  ja_JP: Imagen
-  zh_Hans: Imagen
-  pt_BR: Imagen
+  en_US: Generate images using Vertex AI Imagen.
+  ja_JP: Vertex AI Imagenを使用して画像を生成します。
 icon: icon.svg
 icon_dark: icon-dark.svg
 resource:
