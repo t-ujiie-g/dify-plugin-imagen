@@ -40,15 +40,15 @@ parameters:
         label:
           en_US: Imagen 3.0 Fast (Quick Generation)
           ja_JP: Imagen 3.0 Fast（高速生成）
-      - value: imagen-4.0-generate-preview-06-06
+      - value: imagen-4.0-generate-001
         label:
           en_US: Imagen 4.0 (High Quality)
           ja_JP: Imagen 4.0（高品質）
-      - value: imagen-4.0-fast-generate-preview-06-06
+      - value: imagen-4.0-fast-generate-001
         label:
           en_US: Imagen 4.0 Fast (Quick Generation)
           ja_JP: Imagen 4.0 Fast（高速生成）
-    default: imagen-4.0-generate-preview-06-06
+    default: imagen-4.0-generate-001
     form: form
   - name: aspect_ratio
     type: select
