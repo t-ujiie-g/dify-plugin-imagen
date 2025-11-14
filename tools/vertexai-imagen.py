@@ -6,8 +6,8 @@ import os
 from typing import Any, Dict
 from collections.abc import Generator
 from google.oauth2 import service_account
-from vertexai.preview.vision_models import ImageGenerationModel
-from google.cloud import aiplatform
+from google.genai import Client
+from google.genai import types
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
@@ -51,7 +51,8 @@ class ImagenGenerateTool(Tool):
                 )]
             
             # Initialize Vertex AI
-            aiplatform.init(
+            client =  Client(
+                vertexai=True,
                 project=project_id,
                 location=location,
                 credentials=credentials_obj
@@ -77,16 +78,16 @@ class ImagenGenerateTool(Tool):
                     message={"text": "Number of images must be between 1 and 4"}
                 )]
             
-            # Initialize the Imagen model
-            generation_model = ImageGenerationModel.from_pretrained(model_name)
-            
             # Generate images
             try:
-                response = generation_model.generate_images(
+                response = client.models.generate_images(
+                    model=model_name,
                     prompt=prompt,
-                    number_of_images=number_of_images,
-                    aspect_ratio=aspect_ratio,
-                    safety_filter_level=safety_filter_level,
+                    config=types.GenerateImagesConfig(
+                        number_of_images=number_of_images,
+                        aspect_ratio=aspect_ratio,
+                        safety_filter_level=safety_filter_level,
+                    )
                 )
             except Exception as e:
                 return [ToolInvokeMessage(
@@ -95,7 +96,7 @@ class ImagenGenerateTool(Tool):
                 )]
             
             # Add each generated image
-            for i, image in enumerate(response.images):
+            for i, image in enumerate(response.generated_images):
                 try:
                     # Save image to temporary file
                     with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
