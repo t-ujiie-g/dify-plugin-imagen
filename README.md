@@ -16,3 +16,9 @@ This is a custom tool for [Dify](https://dify.ai/) that allows you to generate i
 - A Google Cloud Platform (GCP) project.
 - Vertex AI API enabled in your GCP project.
 - A GCP Service Account with permissions for Vertex AI, and its corresponding JSON key.
+
+## Memo
+- Package
+```bash
+dify plugin package ../dify-plugin-imagen
+```
