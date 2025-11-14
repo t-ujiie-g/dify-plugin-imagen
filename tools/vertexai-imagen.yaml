@@ -108,19 +108,19 @@ parameters:
       ja_JP: セーフティフィルターの厳格度レベルを設定
     llm_description: Controls how strict the safety filtering is for generated content.
     options:
-      - value: block_medium_and_above
+      - value: BLOCK_MEDIUM_AND_ABOVE
         label:
           en_US: Block Some (Recommended)
           ja_JP: 一部をブロック（推奨）
-      - value: block_only_high
+      - value: BLOCK_ONLY_HIGH
         label:
           en_US: Block Few
           ja_JP: 少数をブロック
-      - value: block_low_and_above
+      - value: BLOCK_LOW_AND_ABOVE
         label:
           en_US: Block Most
           ja_JP: 大部分をブロック
-    default: block_medium_and_above
+    default: BLOCK_LOW_AND_ABOVE
     form: form
 extra:
   python:

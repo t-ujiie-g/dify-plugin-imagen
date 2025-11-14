@@ -33,6 +33,10 @@ class ImagenGenerateTool(Tool):
             project_id = credentials.get('project_id')
             location = credentials.get('location', 'us-central1')
             service_account_key = credentials.get('vertex_service_account_key')
+            SCOPES = [
+                "https://www.googleapis.com/auth/cloud-platform",
+                "https://www.googleapis.com/auth/generative-language"
+            ]
             
             if not project_id or not service_account_key:
                 return [ToolInvokeMessage(
@@ -43,7 +47,10 @@ class ImagenGenerateTool(Tool):
             # Parse service account key
             try:
                 service_account_info = json.loads(base64.b64decode(service_account_key))
-                credentials_obj = service_account.Credentials.from_service_account_info(service_account_info)
+                credentials_obj = service_account.Credentials.from_service_account_info(
+                    service_account_info,
+                    scopes=SCOPES
+                )
             except (json.JSONDecodeError, ValueError) as e:
                 return [ToolInvokeMessage(
                     type=ToolInvokeMessage.MessageType.TEXT,
@@ -63,7 +70,7 @@ class ImagenGenerateTool(Tool):
             model_name = tool_parameters.get("model", "imagen-3.0-generate-001")
             aspect_ratio = tool_parameters.get('aspect_ratio', '1:1')
             number_of_images = tool_parameters.get('number_of_images', 1)
-            safety_filter_level = tool_parameters.get('safety_filter_level', 'block_medium_and_above')
+            safety_filter_level = tool_parameters.get('safety_filter_level', 'BLOCK_LOW_AND_ABOVE')
             
             if not prompt:
                 return [ToolInvokeMessage(
@@ -96,29 +103,20 @@ class ImagenGenerateTool(Tool):
                 )]
             
             # Add each generated image
-            for i, image in enumerate(response.generated_images):
+            for i, generated_image in enumerate(response.generated_images):
                 try:
-                    # Save image to temporary file
-                    with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
-                        image.save(temp_file.name)
+                    image = generated_image.image
                         
-                        # Read image data
-                        with open(temp_file.name, 'rb') as f:
-                            image_data = f.read()
-                        
-                        # Clean up temporary file
-                        os.unlink(temp_file.name)
-                        
-                        # Create image message
-                        yield self.create_blob_message(
-                            blob=image_data,
-                            meta={
-                                'mime_type': 'image/png',
-                                'filename': f'imagen_generated_{i+1}.png',
-                                'alt': prompt,
-                                'usage': 'generated_image'
-                            }
-                        )
+                    # Create image message
+                    yield self.create_blob_message(
+                        blob=image.image_bytes,
+                        meta={
+                            'mime_type': 'image/png',
+                            'filename': f'imagen_generated_{i+1}.png',
+                            'alt': prompt,
+                            'usage': 'generated_image'
+                        }
+                    )
                         
                 except Exception as e:
                     yield ToolInvokeMessage(
