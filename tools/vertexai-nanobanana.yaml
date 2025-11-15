@@ -1,0 +1,54 @@
+identity:
+  name: "vertexai-nanobanana"
+  author: "t-ujiie-g"
+  label:
+    en_US: "Vettex AI Nano Banana"
+    ja_JP: "Vertex AI Nano Banana"
+description:
+  human:
+    en_US: "Generate images using Vertex AI Nano Banana."
+    ja_JP: "Vertex AI Nano Bananaを使用して画像を生成します。"
+  llm: "A tool to generate images based on text prompts using Vertex AI Nano Banana. Specify the model, aspect ratio, number of images, and safety filter level."
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: Text Prompt
+      ja_JP: テキストプロンプト
+    human_description:
+      en_US: Describe the image you want to generate
+      ja_JP: 生成したい画像を説明してください
+    llm_description: A detailed text description of the image to generate. Be specific and descriptive for better results.
+    form: llm
+  - name: image
+    type: file
+    required: false
+    label:
+      en_US: Image
+      zh_Hans: 图像
+      ja_JP: 画像
+    human_description:
+      en_US: One or more images to edit (PNG, JPEG, or WebP, each <7MB).
+      ja_JP: 編集対象の画像(PNG, JPEG, or WebP, 1つ当たり最大 7MB)
+    form: llm
+  - name: model
+    default: "gemini-2.5-flash-image"
+    form: form
+    human_description:
+      en_US: Select the gemini model 
+      ja_JP: Gemini モデルを選択
+    label:
+      en_US: Gemini Model
+      ja_JP: Gemini モデル
+    options:
+      - label:
+          en_US: gemini-2.5-flash-image
+          zh_Hans: gemini-2.5-flash-image
+          ja_JP: gemini-2.5-flash-image
+        value: "gemini-2.5-flash-image"
+    required: false
+    type: select
+extra:
+  python:
+    source: tools/vertexai-nanobanana.py

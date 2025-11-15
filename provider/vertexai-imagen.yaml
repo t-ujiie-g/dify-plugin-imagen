@@ -82,6 +82,7 @@ credentials_for_provider:
 
 tools:
   - tools/vertexai-imagen.yaml
+  - tools/vertexai-nanobanana.yaml
 extra:
   python:
     source: provider/vertexai-imagen.py
