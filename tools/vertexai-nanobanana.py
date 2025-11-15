@@ -2,13 +2,13 @@ import json
 import base64
 import tempfile
 import os
-from io import BytesIO
 
 from typing import Any, Dict
 from PIL import Image
 from collections.abc import Generator
 from google.oauth2 import service_account
 from google.genai import Client
+from google.genai import types
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
@@ -70,26 +70,33 @@ class NanoBananaGenerateTool(Tool):
             prompt = tool_parameters.get('prompt', '')
             image_input = tool_parameters.get('image', None)
             model_name = tool_parameters.get("model", "gemini-2.5-flash-image")
-            
+
             if not prompt:
                 return [ToolInvokeMessage(
                     type=ToolInvokeMessage.MessageType.TEXT,
                     message={"text": "Prompt is required to generate images"}
                 )]
+
+            # Prepare contents
+            contents = [prompt]
             if image_input:
                 try:
                     image = Image.open(image_input)
+                    contents.append(image)
                 except Exception as e:
                     return [ToolInvokeMessage(
                         type=ToolInvokeMessage.MessageType.TEXT,
                         message={"text": f"Invalid image format: {str(e)}"}
                     )]
-            
+
             # Generate images
             try:
                 response = client.models.generate_content(
                     model=model_name,
-                    contents=[prompt, image]
+                    contents=contents,
+                    config=types.GenerateContentConfig(
+                        response_modalities=["IMAGE", "TEXT"]
+                    )
                 )
             except Exception as e:
                 return [ToolInvokeMessage(
@@ -98,32 +105,27 @@ class NanoBananaGenerateTool(Tool):
                 )]
             
             # Add each generated image
-            for i, part in enumerate(response.candidates[0].content.parts):
+            for i, part in enumerate(response.parts):
                 try:
+                    if part.text is not None:
+                        yield self.create_text_message(
+                            text=part.text
+                        )
                     if part.inline_data is not None:
-                        # Save image to temporary file
-                        with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
-                            output_image = Image.open(BytesIO(part.inline_data.data))
-                            output_image.save(temp_file.name)
-                            
-                            # Read image data
-                            with open(temp_file.name, 'rb') as f:
-                                image_data = f.read()
-                            
-                            # Clean up temporary file
-                            os.unlink(temp_file.name)
-                            
-                            # Create image message
-                            yield self.create_blob_message(
-                                blob=image_data,
-                                meta={
-                                    'mime_type': 'image/png',
-                                    'filename': f'imagen_generated_{i+1}.png',
-                                    'alt': prompt,
-                                    'usage': 'generated_image'
-                                }
-                            )
-                        
+                        # Get image using as_image() method
+                        output_image = part.as_image()
+
+                        # Create image message
+                        yield self.create_blob_message(
+                            blob=output_image.image_bytes,
+                            meta={
+                                'mime_type': 'image/png',
+                                'filename': f'nanobanana_generated_{i+1}.png',
+                                'alt': prompt,
+                                'usage': 'generated_image'
+                            }
+                        )
+
                 except Exception as e:
                     yield ToolInvokeMessage(
                         type=ToolInvokeMessage.MessageType.TEXT,

@@ -1,13 +1,13 @@
-version: 0.0.2
+version: 0.0.4
 type: plugin
 author: t-ujiie-g
 name: vertexai-imagen
 label:
-  en_US: Vettex AI Imagen
-  ja_JP: Vertex AI Imagen
+  en_US: Vettex AI Imagen & Nano Banana
+  ja_JP: Vertex AI Imagen & Nano Banana
 description:
-  en_US: Generate images using Vertex AI Imagen.
-  ja_JP: Vertex AI Imagenを使用して画像を生成します。
+  en_US: Generate images using Vertex AI Imagen & Nano Banana.
+  ja_JP: Vertex AI Imagen & Nano Bananaを使用して画像を生成します。
 icon: icon.svg
 icon_dark: icon-dark.svg
 resource:
