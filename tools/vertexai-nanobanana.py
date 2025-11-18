@@ -1,7 +1,6 @@
 import json
 import base64
-import tempfile
-import os
+import io
 
 from typing import Any, Dict
 from PIL import Image
@@ -81,13 +80,46 @@ class NanoBananaGenerateTool(Tool):
             contents = [prompt]
             if image_input:
                 try:
-                    image = Image.open(image_input)
+                    # File オブジェクトから画像を取得
+                    # まず、blobから直接読み込みを試みる
+                    try:
+                        blob_value = image_input.blob
+                        if isinstance(blob_value, bytes):
+                            image = Image.open(io.BytesIO(blob_value))
+                        else:
+                            raise ValueError(f"blob is not bytes: {type(blob_value)}")
+
+                    except Exception:
+                        # blobでエラーが出た場合（IAP認証などで直接アクセスできない場合）、URLからダウンロードを試みる
+                        import requests
+                        import re
+
+                        url_value = image_input.url if hasattr(image_input, 'url') else None
+                        if not url_value:
+                            raise ValueError("Cannot retrieve image from File object")
+
+                        # Docker内部のnginxコンテナ経由でアクセスを試みる（IAP環境対応）
+                        try:
+                            internal_url = re.sub(r'https://[^/]+', 'http://nginx', url_value)
+                            response = requests.get(internal_url, timeout=10)
+                            response.raise_for_status()
+                            image_bytes = response.content
+                            image = Image.open(io.BytesIO(image_bytes))
+                        except Exception:
+                            # nginx経由でもエラーが出た場合、通常のURLでアクセス（非IAP環境）
+                            response = requests.get(url_value, timeout=10)
+                            response.raise_for_status()
+                            image_bytes = response.content
+                            image = Image.open(io.BytesIO(image_bytes))
+
                     contents.append(image)
+
                 except Exception as e:
-                    return [ToolInvokeMessage(
+                    yield ToolInvokeMessage(
                         type=ToolInvokeMessage.MessageType.TEXT,
-                        message={"text": f"Invalid image format: {str(e)}"}
-                    )]
+                        message={"text": f"Error loading image: {str(e)}"}
+                    )
+                    return
 
             # Generate images
             try:
