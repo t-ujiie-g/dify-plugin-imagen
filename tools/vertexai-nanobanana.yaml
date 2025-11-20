@@ -42,11 +42,14 @@ parameters:
       en_US: Gemini Model
       ja_JP: Gemini モデル
     options:
-      - label:
+      - value: "gemini-2.5-flash-image"
+        label:
           en_US: gemini-2.5-flash-image
-          zh_Hans: gemini-2.5-flash-image
           ja_JP: gemini-2.5-flash-image
-        value: "gemini-2.5-flash-image"
+      - value: "gemini-3-pro-image-preview"
+        label:
+          en_US: gemini-3-pro-image-preview
+          ja_JP: gemini-3-pro-image-preview
     required: false
     type: select
 extra:

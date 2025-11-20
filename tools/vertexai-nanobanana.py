@@ -31,7 +31,7 @@ class NanoBananaGenerateTool(Tool):
             # Get credentials and configuration
             credentials = self.runtime.credentials
             project_id = credentials.get('project_id')
-            location = credentials.get('location', 'us-central1')
+            location = credentials.get('location', 'global')
             service_account_key = credentials.get('vertex_service_account_key')
             SCOPES = [
                 "https://www.googleapis.com/auth/cloud-platform",
