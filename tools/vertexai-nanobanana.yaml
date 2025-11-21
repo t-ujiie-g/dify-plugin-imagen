@@ -52,6 +52,17 @@ parameters:
           ja_JP: gemini-3-pro-image-preview
     required: false
     type: select
+  - name: use_google_search
+    type: boolean
+    required: false
+    label:
+      en_US: Use Google Search for prompt enhancement
+      ja_JP: Google検索を使用する（gemini-3-pro-imageのみ対応）
+    human_description:
+      en_US: Enable this option to enhance your image generation prompt using relevant information from Google Search.
+      ja_JP: このオプションを有効にすると、Google検索からの関連情報を使用して画像生成が可能となります。
+    default: false
+    form: form
 extra:
   python:
     source: tools/vertexai-nanobanana.py

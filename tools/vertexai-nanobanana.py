@@ -69,6 +69,7 @@ class NanoBananaGenerateTool(Tool):
             prompt = tool_parameters.get('prompt', '')
             image_input = tool_parameters.get('image', None)
             model_name = tool_parameters.get("model", "gemini-2.5-flash-image")
+            use_google_search = tool_parameters.get("use_google_search", False)
 
             if not prompt:
                 return [ToolInvokeMessage(
@@ -122,13 +123,20 @@ class NanoBananaGenerateTool(Tool):
                     return
 
             # Generate images
+            if use_google_search:
+                model_config = types.GenerateContentConfig(
+                    response_modalities=["IMAGE", "TEXT"],
+                    tools=[{"google_search": {}}]
+                )
+            else:
+                model_config = types.GenerateContentConfig(
+                    response_modalities=["IMAGE", "TEXT"]
+                )
             try:
                 response = client.models.generate_content(
                     model=model_name,
                     contents=contents,
-                    config=types.GenerateContentConfig(
-                        response_modalities=["IMAGE", "TEXT"]
-                    )
+                    config=model_config,
                 )
             except Exception as e:
                 return [ToolInvokeMessage(
