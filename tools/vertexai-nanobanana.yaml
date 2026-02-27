@@ -24,7 +24,7 @@ parameters:
     and descriptive for better results.
   form: llm
 - name: image
-  type: file
+  type: files
   required: false
   label:
     en_US: Image

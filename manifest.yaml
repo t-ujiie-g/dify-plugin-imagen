@@ -1,4 +1,4 @@
-version: 0.0.7
+version: 0.0.8
 type: plugin
 author: t-ujiie-g
 name: vertexai-imagen
@@ -17,7 +17,7 @@ plugins:
   tools:
     - provider/vertexai-imagen.yaml
 meta:
-  version: 0.0.7
+  version: 0.0.8
   arch:
     - amd64
     - arm64
