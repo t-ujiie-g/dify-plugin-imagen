@@ -1,68 +1,159 @@
 identity:
-  name: "vertexai-nanobanana"
-  author: "t-ujiie-g"
+  name: vertexai-nanobanana
+  author: t-ujiie-g
   label:
-    en_US: "Vettex AI Nano Banana"
-    ja_JP: "Vertex AI Nano Banana"
+    en_US: Vettex AI Nano Banana
+    ja_JP: Vertex AI Nano Banana
 description:
   human:
-    en_US: "Generate images using Vertex AI Nano Banana."
-    ja_JP: "Vertex AI Nano Bananaを使用して画像を生成します。"
-  llm: "A tool to generate images based on text prompts using Vertex AI Nano Banana. Specify the model, aspect ratio, number of images, and safety filter level."
+    en_US: Generate images using Vertex AI Nano Banana.
+    ja_JP: Vertex AI Nano Bananaを使用して画像を生成します。
+  llm: A tool to generate images based on text prompts using Vertex AI Nano Banana.
+    Specify the model, aspect ratio, number of images, and safety filter level.
 parameters:
-  - name: prompt
-    type: string
-    required: true
+- name: prompt
+  type: string
+  required: true
+  label:
+    en_US: Text Prompt
+    ja_JP: テキストプロンプト
+  human_description:
+    en_US: Describe the image you want to generate
+    ja_JP: 生成したい画像を説明してください
+  llm_description: A detailed text description of the image to generate. Be specific
+    and descriptive for better results.
+  form: llm
+- name: image
+  type: file
+  required: false
+  label:
+    en_US: Image
+    ja_JP: 画像
+  human_description:
+    en_US: One or more images to edit (PNG, JPEG, or WebP, each <7MB).
+    ja_JP: 編集対象の画像(PNG, JPEG, or WebP, 1つ当たり最大 7MB)
+  form: llm
+- name: number_of_images
+  type: number
+  required: false
+  default: 1
+  min: 1
+  max: 4
+  label:
+    en_US: Number of Images
+    ja_JP: 画像の生成数
+  human_description:
+    en_US: Number of images to generate (1-4).
+    ja_JP: 生成する画像の数 (1〜4)
+  form: form
+- name: aspect_ratio
+  type: select
+  required: false
+  default: '1:1'
+  label:
+    en_US: Aspect Ratio
+    ja_JP: アスペクト比
+  human_description:
+    en_US: The aspect ratio of the generated image.
+    ja_JP: 生成する画像のアスペクト比
+  options:
+  - value: '1:1'
     label:
-      en_US: Text Prompt
-      ja_JP: テキストプロンプト
-    human_description:
-      en_US: Describe the image you want to generate
-      ja_JP: 生成したい画像を説明してください
-    llm_description: A detailed text description of the image to generate. Be specific and descriptive for better results.
-    form: llm
-  - name: image
-    type: file
-    required: false
+      en_US: '1:1'
+      ja_JP: '1:1'
+  - value: '3:4'
     label:
-      en_US: Image
-      zh_Hans: 图像
-      ja_JP: 画像
-    human_description:
-      en_US: One or more images to edit (PNG, JPEG, or WebP, each <7MB).
-      ja_JP: 編集対象の画像(PNG, JPEG, or WebP, 1つ当たり最大 7MB)
-    form: llm
-  - name: model
-    default: "gemini-2.5-flash-image"
-    form: form
-    human_description:
-      en_US: Select the gemini model 
-      ja_JP: Gemini モデルを選択
+      en_US: '3:4'
+      ja_JP: '3:4'
+  - value: '4:3'
     label:
-      en_US: Gemini Model
-      ja_JP: Gemini モデル
-    options:
-      - value: "gemini-2.5-flash-image"
-        label:
-          en_US: gemini-2.5-flash-image
-          ja_JP: gemini-2.5-flash-image
-      - value: "gemini-3-pro-image-preview"
-        label:
-          en_US: gemini-3-pro-image-preview
-          ja_JP: gemini-3-pro-image-preview
-    required: false
-    type: select
-  - name: use_google_search
-    type: boolean
-    required: false
+      en_US: '4:3'
+      ja_JP: '4:3'
+  - value: '9:16'
     label:
-      en_US: Use Google Search for prompt enhancement
-      ja_JP: Google検索を使用する（gemini-3-pro-imageのみ対応）
-    human_description:
-      en_US: Enable this option to enhance your image generation prompt using relevant information from Google Search.
-      ja_JP: このオプションを有効にすると、Google検索からの関連情報を使用して画像生成が可能となります。
-    default: false
-    form: form
+      en_US: '9:16'
+      ja_JP: '9:16'
+  - value: '16:9'
+    label:
+      en_US: '16:9'
+      ja_JP: '16:9'
+  - value: '1:4'
+    label:
+      en_US: '1:4'
+      ja_JP: '1:4'
+  - value: '4:1'
+    label:
+      en_US: '4:1'
+      ja_JP: '4:1'
+  - value: '1:8'
+    label:
+      en_US: '1:8'
+      ja_JP: '1:8'
+  - value: '8:1'
+    label:
+      en_US: '8:1'
+      ja_JP: '8:1'
+  form: form
+- name: image_size
+  type: select
+  required: false
+  default: 1K
+  label:
+    en_US: Resolution
+    ja_JP: 解像度
+  human_description:
+    en_US: The resolution of the generated image.
+    ja_JP: 生成する画像の解像度 (0.5K〜4K)
+  options:
+  - value: 0.5K
+    label:
+      en_US: 0.5K
+      ja_JP: 0.5K
+  - value: 1K
+    label:
+      en_US: 1K
+      ja_JP: 1K
+  - value: 2K
+    label:
+      en_US: 2K
+      ja_JP: 2K
+  - value: 4K
+    label:
+      en_US: 4K
+      ja_JP: 4K
+  form: form
+- name: model
+  default: gemini-3.1-flash-image-preview
+  form: form
+  human_description:
+    en_US: Select the gemini model
+    ja_JP: Gemini モデルを選択
+  label:
+    en_US: Gemini Model
+    ja_JP: Gemini モデル
+  options:
+  - value: gemini-3.1-flash-image-preview
+    label:
+      en_US: gemini-3.1-flash-image-preview
+      ja_JP: gemini-3.1-flash-image-preview
+  - value: gemini-3-pro-image-preview
+    label:
+      en_US: gemini-3-pro-image-preview
+      ja_JP: gemini-3-pro-image-preview
+  required: false
+  type: select
+- name: use_google_search
+  type: boolean
+  required: false
+  label:
+    en_US: Use Google Search for prompt enhancement
+    ja_JP: Google検索を使用する
+  human_description:
+    en_US: Enable this option to enhance your image generation prompt using relevant
+      information from Google Search.
+    ja_JP: このオプションを有効にすると、Google検索からの関連情報を使用して画像生成が可能となります。
+  default: false
+  form: form
 extra:
   python:
     source: tools/vertexai-nanobanana.py

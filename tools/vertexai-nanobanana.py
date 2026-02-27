@@ -68,8 +68,11 @@ class NanoBananaGenerateTool(Tool):
             # Get tool parameters
             prompt = tool_parameters.get('prompt', '')
             image_input = tool_parameters.get('image', None)
-            model_name = tool_parameters.get("model", "gemini-2.5-flash-image")
+            model_name = tool_parameters.get("model", "gemini-3.1-flash-image-preview")
             use_google_search = tool_parameters.get("use_google_search", False)
+            number_of_images = tool_parameters.get("number_of_images", 1)
+            aspect_ratio = tool_parameters.get("aspect_ratio", "1:1")
+            image_size = tool_parameters.get("image_size", "1K")
 
             if not prompt:
                 return [ToolInvokeMessage(
@@ -77,14 +80,32 @@ class NanoBananaGenerateTool(Tool):
                     message={"text": "Prompt is required to generate images"}
                 )]
 
+            # Add instructions for multiple images
+            # Aspect ratio and resolution are handled via image_config, but adding to prompt can help consistency
+            prompt_instructions = []
+            if number_of_images > 1:
+                prompt_instructions.append(f"Generate exactly {number_of_images} images.")
+            
+            if prompt_instructions:
+                prompt = prompt + "\n\nInstructions: " + " ".join(prompt_instructions)
+
             # Prepare contents
             contents = [prompt]
+            
+            # Handle multiple images
+            image_inputs = []
             if image_input:
+                if isinstance(image_input, list):
+                    image_inputs = image_input
+                else:
+                    image_inputs = [image_input]
+
+            for img_in in image_inputs:
                 try:
                     # File オブジェクトから画像を取得
                     # まず、blobから直接読み込みを試みる
                     try:
-                        blob_value = image_input.blob
+                        blob_value = img_in.blob
                         if isinstance(blob_value, bytes):
                             image = Image.open(io.BytesIO(blob_value))
                         else:
@@ -95,7 +116,7 @@ class NanoBananaGenerateTool(Tool):
                         import requests
                         import re
 
-                        url_value = image_input.url if hasattr(image_input, 'url') else None
+                        url_value = img_in.url if hasattr(img_in, 'url') else None
                         if not url_value:
                             raise ValueError("Cannot retrieve image from File object")
 
@@ -123,14 +144,21 @@ class NanoBananaGenerateTool(Tool):
                     return
 
             # Generate images
+            image_config = types.ImageConfig(
+                aspect_ratio=aspect_ratio,
+                image_size=image_size
+            )
+            
             if use_google_search:
                 model_config = types.GenerateContentConfig(
                     response_modalities=["IMAGE", "TEXT"],
-                    tools=[{"google_search": {}}]
+                    tools=[{"google_search": {}}],
+                    image_config=image_config
                 )
             else:
                 model_config = types.GenerateContentConfig(
-                    response_modalities=["IMAGE", "TEXT"]
+                    response_modalities=["IMAGE", "TEXT"],
+                    image_config=image_config
                 )
             try:
                 response = client.models.generate_content(

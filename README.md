@@ -1,14 +1,20 @@
-# Vertex AI Imagen Plugin for Dify
+# Vertex AI Imagen & Nano Banana Plugin for Dify
 
-This is a custom tool for [Dify](https://dify.ai/) that allows you to generate images using Google Cloud's **Vertex AI Imagen**. Integrate high-quality image generation capabilities directly into your Dify AI applications.
+This is a custom tool for [Dify](https://dify.ai/) that allows you to generate images using Google Cloud's **Vertex AI Imagen** and **Gemini 3.1 Flash Image Preview (Nano Banana)**. Integrate high-quality image generation capabilities directly into your Dify AI applications.
 
 ## ✨ Features
 
 - **Text-to-Image Generation**: Create images from text prompts.
-- **Multiple Model Support**: Choose between different Imagen versions like `Imagen 4` and `Imagen 3`.
-- **Aspect Ratio Control**: Supports `1:1`, `16:9`, `9:16`, `4:3`, and `3:4`.
-- **Adjustable Image Count**: Generate 1 to 4 images per request.
-- **Safety Controls**: Configure safety filters for generated content.
+- **Multi-Model Support**: 
+  - **Imagen**: Choose between different Imagen versions like `Imagen 4` and `Imagen 3`.
+  - **Gemini 3.1 Flash Image Preview (Nano Banana)**: Support for the latest highly efficient image generation model, including multi-modal interactions.
+- **Aspect Ratio Control**: 
+  - Imagen: Supports `1:1`, `16:9`, `9:16`, `4:3`, and `3:4`.
+  - Nano Banana: Supports an extended range including `1:1`, `3:4`, `4:3`, `9:16`, `16:9`, `1:4`, `4:1`, `1:8`, and `8:1`.
+- **Resolution Control**: Specify `0.5K`, `1K`, `2K`, or `4K` resolutions (for Nano Banana).
+- **Adjustable Image Count**: Generate 1 to 4 images per request (for both models).
+- **Safety Controls**: Configure safety filters for generated content (Imagen).
+- **Image Input**: Support for image-to-image workflows by passing input images (Nano Banana).
 
 ## ⚙️ Requirements
 
