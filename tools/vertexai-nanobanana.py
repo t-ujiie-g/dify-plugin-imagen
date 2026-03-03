@@ -70,7 +70,6 @@ class NanoBananaGenerateTool(Tool):
             image_input = tool_parameters.get('image', None)
             model_name = tool_parameters.get("model", "gemini-3.1-flash-image-preview")
             use_google_search = tool_parameters.get("use_google_search", False)
-            number_of_images = tool_parameters.get("number_of_images", 1)
             aspect_ratio = tool_parameters.get("aspect_ratio", "1:1")
             image_size = tool_parameters.get("image_size", "1K")
 
@@ -79,15 +78,6 @@ class NanoBananaGenerateTool(Tool):
                     type=ToolInvokeMessage.MessageType.TEXT,
                     message={"text": "Prompt is required to generate images"}
                 )]
-
-            # Add instructions for multiple images
-            # Aspect ratio and resolution are handled via image_config, but adding to prompt can help consistency
-            prompt_instructions = []
-            if number_of_images > 1:
-                prompt_instructions.append(f"Generate exactly {number_of_images} images.")
-            
-            if prompt_instructions:
-                prompt = prompt + "\n\nInstructions: " + " ".join(prompt_instructions)
 
             # Prepare contents
             contents = [prompt]

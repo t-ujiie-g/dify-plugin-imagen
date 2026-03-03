@@ -33,19 +33,6 @@ parameters:
     en_US: One or more images to edit (PNG, JPEG, or WebP, each <7MB).
     ja_JP: 編集対象の画像(PNG, JPEG, or WebP, 1つ当たり最大 7MB)
   form: llm
-- name: number_of_images
-  type: number
-  required: false
-  default: 1
-  min: 1
-  max: 4
-  label:
-    en_US: Number of Images
-    ja_JP: 画像の生成数
-  human_description:
-    en_US: Number of images to generate (1-4).
-    ja_JP: 生成する画像の数 (1〜4)
-  form: form
 - name: aspect_ratio
   type: select
   required: false
@@ -105,7 +92,7 @@ parameters:
     en_US: The resolution of the generated image.
     ja_JP: 生成する画像の解像度 (0.5K〜4K)
   options:
-  - value: 0.5K
+  - value: 512px
     label:
       en_US: 0.5K
       ja_JP: 0.5K
