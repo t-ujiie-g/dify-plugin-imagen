@@ -68,7 +68,7 @@ class NanoBananaGenerateTool(Tool):
             # Get tool parameters
             prompt = tool_parameters.get('prompt', '')
             image_input = tool_parameters.get('image', None)
-            model_name = tool_parameters.get("model", "gemini-3.1-flash-image-preview")
+            model_name = tool_parameters.get("model", "gemini-3.1-flash-image")
             use_google_search = tool_parameters.get("use_google_search", False)
             aspect_ratio = tool_parameters.get("aspect_ratio", "1:1")
             image_size = tool_parameters.get("image_size", "1K")
